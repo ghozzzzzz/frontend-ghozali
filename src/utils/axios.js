@@ -1,12 +1,14 @@
 import axios from 'axios';
-import { store } from '../pages/Redux/stores';
-import { logout } from '../pages/Redux/authSlice';
 
-const baseURL = import.meta.env.PROD 
-  ? 'https://backend-ghozali-production.up.railway.app/api'
-  : 'http://localhost:5000/api';
-
-const api = axios.create({ baseURL });
+const api = axios.create({
+  baseURL: import.meta.env.PROD 
+    ? 'https://backend-ghozali-production.up.railway.app/api'
+    : 'http://localhost:5000/api',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
 // Request interceptor
 api.interceptors.request.use(
@@ -27,7 +29,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      store.dispatch(logout());
+      localStorage.removeItem('token');
       window.location.href = '/login';
     }
     return Promise.reject(error);
