@@ -2,9 +2,11 @@ import axios from 'axios';
 import { store } from '../pages/Redux/stores';
 import { logout } from '../pages/Redux/authSlice';
 
-const api = axios.create({
-  baseURL: 'http://localhost:5000/api'
-});
+const baseURL = import.meta.env.PROD 
+  ? 'https://backend-ghozali-production.up.railway.app/api'
+  : 'http://localhost:5000/api';
+
+const api = axios.create({ baseURL });
 
 // Request interceptor
 api.interceptors.request.use(
